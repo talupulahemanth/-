@@ -1,0 +1,49 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Savoychat</title>
+</head>
+<body>
+    <h1>Welcome to Savoychat</h1>
+    <form action="/recommend" method="post">
+        <label for="dish_type">Choose dish type:</label>
+        <select name="dish_type" id="dish_type">
+            <option value="Veg">Veg</option>
+            <option value="Non-Veg">Non-Veg</option>
+        </select><br>
+
+        <label for="dish_category">Choose dish category:</label>
+        <select name="dish_category" id="dish_category">
+            <option value="Bites">Bites</option>
+            <option value="Mains">Mains</option>
+            <option value="Sides">Sides</option>
+            <option value="Desserts">Desserts</option>
+        </select><br>
+
+        <label for="allergens">Choose allergens:</label><br>
+        <input type="checkbox" name="allergens" value="Halal"> Halal<br>
+        <input type="checkbox" name="allergens" value="Pork"> Pork<br>
+        <input type="checkbox" name="allergens" value="Beef"> Beef<br>
+        <input type="checkbox" name="allergens" value="Alcohol"> Alcohol<br>
+        <input type="checkbox" name="allergens" value="Gluten"> Gluten<br>
+        <input type="checkbox" name="allergens" value="Dairy"> Dairy<br>
+        <input type="checkbox" name="allergens" value="Soy"> Soy<br>
+        <input type="checkbox" name="allergens" value="Fish"> Fish<br>
+        <input type="checkbox" name="allergens" value="Sesame"> Sesame<br>
+        <input type="checkbox" name="allergens" value="Sulphur Dioxide"> Sulphur Dioxide<br>
+        <input type="checkbox" name="allergens" value="Nuts"> Nuts<br>
+        <input type="checkbox" name="allergens" value="Mustard"> Mustard<br>
+        <input type="checkbox" name="allergens" value="Shellfish"> Shellfish<br>
+        <input type="checkbox" name="allergens" value="Crustaceans"> Crustaceans<br>
+        <input type="checkbox" name="allergens" value="Celery"> Celery<br>
+        <input type="checkbox" name="allergens" value="None"> None<br>
+
+        <input type="submit" value="Get Recommendations">
+    </form>
+</body>
+</html>

@@ -1,0 +1,77 @@
+# Import necessary libraries
+from flask import Flask, render_template, request
+from gtts import gTTS
+import os
+import sqlite3
+
+app = Flask(__name__, static_folder='static', template_folder='templates')
+
+# Function to create a database connection
+def create_connection(db_file):
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+        return conn
+    except sqlite3.Error as e:
+        print(e)
+    return conn
+
+# Function to get recommendations from the database
+def get_recommendations(conn, dish_type, dish_category, allergens, language):
+    query = """
+        SELECT dish_name, dish_type, dish_category
+        FROM items
+        WHERE LOWER(dish_type) = LOWER(?) AND LOWER(dish_category) = LOWER(?)
+    """
+
+    if allergens and allergens[0] != 'none':
+        allergen_conditions = " AND ".join([f"LOWER(allergens) NOT LIKE '%{allergen}%'" for allergen in allergens])
+        query += f" AND ({allergen_conditions})"
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute(query, (dish_type, dish_category))
+        rows = cursor.fetchall()
+        return rows
+    except sqlite3.Error as e:
+        print(e)
+    return []
+
+# Function to convert text to speech using gTTS
+def convert_text_to_speech(text, language):
+    tts = gTTS(text, lang=language, slow=False)
+    temp_file = 'static/temp.mp3'
+    tts.save(temp_file)
+    return temp_file
+
+# Main route for the web application
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    languages = ['en', 'es', 'fr', 'de', 'te', 'ta', 'kn', 'hi', 'it', 'pt']  # Add more languages as needed
+
+    if request.method == 'POST':
+        dish_type = request.form.get('dish_type')
+        dish_category = request.form.get('dish_category')
+
+        allergens_input = request.form.get('allergens')
+        allergens = allergens_input.lower().split(',') if allergens_input else []
+
+        language = request.form.get('language', 'en')  # Default to English if not selected
+
+        database = r"C:\Users\heman\OneDrive - University of Hertfordshire\HOTEL_BASED_AI_CHATBOT_PROJECT\hotel-based-ai-chatbot\Hotel Database\sqlite-tools-win32-x86-3430200\savoy.database.db"
+        conn = create_connection(database)
+
+        if conn:
+            recommendations = get_recommendations(conn, dish_type, dish_category, allergens, language)
+            conn.close()
+
+            # Convert recommendations to speech in the selected language
+            speech_file = convert_text_to_speech('\n'.join([f"{dish[0]} - {dish[1]} - {dish[2]}" for dish in recommendations]), language)
+
+            return render_template('recommendations.html', recommendations=recommendations, languages=languages, speech_file=speech_file)
+
+    return render_template('index.html', recommendations=None, languages=languages)
+
+# Run the Flask application
+if __name__ == '__main__':
+    app.run(debug=True)

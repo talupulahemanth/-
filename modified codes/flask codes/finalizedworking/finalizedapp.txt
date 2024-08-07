@@ -1,0 +1,56 @@
+from flask import Flask, render_template, request
+import sqlite3
+
+app = Flask(__name__, static_folder='static', template_folder='templates')
+
+def create_connection(db_file):
+    """Create a database connection to the SQLite database specified by db_file."""
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+        return conn
+    except sqlite3.Error as e:
+        print(e)
+    return conn
+
+def get_recommendations(conn, dish_type, dish_category, allergens):
+    query = f"""
+        SELECT dish_name, dish_type, dish_category
+        FROM items
+        WHERE LOWER(dish_type) = LOWER(?) AND LOWER(dish_category) = LOWER(?)
+    """
+
+    if allergens and allergens[0] != 'none':
+        allergen_conditions = " AND ".join([f"LOWER(allergens) NOT LIKE '%{allergen}%'" for allergen in allergens])
+        query += f" AND ({allergen_conditions})"
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute(query, (dish_type, dish_category))
+        rows = cursor.fetchall()
+        return rows
+    except sqlite3.Error as e:
+        print(e)
+    return []
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        dish_type = request.form.get('dish_type')
+        dish_category = request.form.get('dish_category')
+        allergens = request.form.get('allergens').lower().split(',')
+        allergens = [allergen.strip() for allergen in allergens]
+
+        database = r"C:\Users\heman\OneDrive - University of Hertfordshire\HOTEL_BASED_AI_CHATBOT_PROJECT\hotel-based-ai-chatbot\Hotel Database\sqlite-tools-win32-x86-3430200\savoy.database.db"
+        conn = create_connection(database)
+
+        if conn:
+            recommendations = get_recommendations(conn, dish_type, dish_category, allergens)
+            conn.close()
+
+            return render_template('recommendations.html', recommendations=recommendations)
+
+    return render_template('index.html', recommendations=None)
+
+if __name__ == '__main__':
+    app.run(debug=True)

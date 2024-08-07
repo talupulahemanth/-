@@ -1,0 +1,23 @@
+<!-- SavoyLife/savoylifebot/templates/savoylifebot/chatbot.html -->
+
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <div class="chat-container">
+    <div class="chat-box">
+      <div class="chat-header">
+        Chatbot
+      </div>
+      <div class="chat-content">
+        <!-- Messages will go here -->
+      </div>
+      <div class="chat-input">
+        <input type="text" placeholder="Type a message...">
+        <button>Send</button>
+      </div>
+    </div>
+  </div>
+
+  <link rel="stylesheet" type="text/css" href="{% static 'savoylifebot/css/chatbot.css' %}">
+  <script type="text/javascript" src="{% static 'savoylifebot/js/chatbot.js' %}"></script>
+{% endblock %}

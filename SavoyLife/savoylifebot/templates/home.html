@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to SavoyLife!</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+        body {
+            background-color: #f4f4f4;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        h1 {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        a.btn {
+            font-size: 1.2em;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container text-center animate__animated animate__fadeIn">
+        <h1>Welcome to SavoyLife!</h1>
+        <p>Your journey to delicious and safe dining starts here.</p>
+        <a href="{% url 'savoylifebot:menu' %}" class="btn btn-primary">View Menu</a>
+    </div>
+</body>
+</html>

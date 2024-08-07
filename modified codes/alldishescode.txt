@@ -1,0 +1,60 @@
+import sqlite3
+from sqlite3 import Error
+
+
+def create_connection(db_file):
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+        print("Successfully connected to the database.")
+    except Error as e:
+        print("Error connecting to database:", e)
+    return conn
+
+
+def select_all_dishes(conn, dish_type, allergens):
+    cur = conn.cursor()
+    try:
+        cur.execute("SELECT * FROM menu_items")
+    except Error as e:
+        print("Error executing SELECT query:", e)
+        return
+
+    results = cur.fetchall()
+    if not results:
+        print("No dishes found in the database.")
+        return
+
+    print("\nAll Dishes from Database:")
+    print("-------------------------")
+    for row in results:
+        print(row[0], "-", row[1], "-", row[2])
+
+    print("\nRecommended Dishes:")
+    print("-------------------")
+    found = False
+    for row in results:
+        db_dish_type, db_allergens = row[1].lower(), (row[2] or '').lower().split(', ')
+        db_allergens = [allergen.strip() for allergen in db_allergens]
+        if dish_type == db_dish_type and not any(allergen in db_allergens for allergen in allergens):
+            print(row[0], "-", db_dish_type)
+            found = True
+    if not found:
+        print("No recommended dishes found based on the given preferences.")
+
+
+def main():
+    database = r"C:\Users\heman\OneDrive - University of Hertfordshire\HOTEL_BASED_AI_CHATBOT_PROJECT\hotel-based-ai-chatbot\Hotel Database\sqlite-tools-win32-x86-3430200\menu_database.db"
+    dish_type = "veg"
+    allergens = ["gluten", "dairy"]
+
+    conn = create_connection(database)
+    if conn:
+        select_all_dishes(conn, dish_type, allergens)
+        conn.close()
+    else:
+        print("Error! Cannot create the database connection.")
+
+
+if __name__ == '__main__':
+    main()

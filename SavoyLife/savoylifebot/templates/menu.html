@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+        body {
+            background-color: #f4f4f4;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        h1 {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        ul {
+            padding-left: 0;
+            list-style: none;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container animate__animated animate__fadeIn">
+        <h1>Menu</h1>
+        <form method="get" action="{% url 'savoylifebot:menu' %}">
+            <div class="form-group">
+                <label for="allergens">Enter allergens to exclude (comma separated):</label>
+                <input type="text" class="form-control" id="allergens" name="allergens" value="{{ allergens }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+        <ul>
+            {% for item in menu_items %}
+                <li>{{ item.dish_name }} - {{ item.dish_type }} - Allergens: {{ item.allergens }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

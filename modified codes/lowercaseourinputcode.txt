@@ -1,0 +1,63 @@
+import sqlite3
+
+
+def create_connection(db_file):
+    """Create a database connection to the SQLite database specified by db_file."""
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+        return conn
+    except sqlite3.Error as e:
+        print(e)
+    return conn
+
+
+def get_recommendations(conn, dish_type, allergens):
+    """
+    Get dish recommendations based on dish type and allergens to avoid.
+
+    :param conn: Connection object
+    :param dish_type: Selected dish type (Veg/Non-Veg)
+    :param allergens: List of allergens to avoid
+    :return: List of recommended dishes
+    """
+    dish_type = dish_type.lower()
+    allergens = [allergen.lower().strip() for allergen in allergens]
+
+    if 'none' in allergens:
+        query = f"SELECT dish_name, dish_type FROM menu_items WHERE LOWER(dish_type) = '{dish_type}';"
+    else:
+        allergen_conditions = " AND ".join([f"LOWER(allergens) NOT LIKE '%{allergen}%'" for allergen in allergens])
+        query = f"SELECT dish_name, dish_type FROM menu_items WHERE LOWER(dish_type) = '{dish_type}' AND {allergen_conditions};"
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        return rows
+    except sqlite3.Error as e:
+        print(e)
+    return []
+
+
+def main():
+    database = r"C:\Users\heman\OneDrive - University of Hertfordshire\HOTEL_BASED_AI_CHATBOT_PROJECT\hotel-based-ai-chatbot\Hotel Database\sqlite-tools-win32-x86-3430200\menu_database.db"
+
+    # create a database connection
+    conn = create_connection(database)
+    with conn:
+        # User preferences (for testing)
+        dish_type = "Veg"
+        allergens = ["Gluten", "Dairy"]
+
+        # Get recommendations
+        recommendations = get_recommendations(conn, dish_type, allergens)
+
+        # Print recommendations
+        print("Recommended Dishes:")
+        for dish in recommendations:
+            print(dish)
+
+
+if __name__ == '__main__':
+    main()

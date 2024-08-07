@@ -1,0 +1,35 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Savoychat - Smart Menu Recommendation System</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Savoychat</h1>
+        <form action="{{ url_for('index') }}" method="post">
+            <label for="dishType">Kindly choose the dish type:</label>
+            <select name="dish_type" id="dishType">
+                <option value="Veg">Veg</option>
+                <option value="Non-Veg">Non-Veg</option>
+            </select>
+
+            <label for="dishCategory">Kindly choose the category:</label>
+            <select name="dish_category" id="dishCategory">
+                <option value="Bites">Bites</option>
+                <option value="Mains">Mains</option>
+                <option value="Sides">Sides</option>
+                <option value="Desserts">Desserts</option>
+            </select>
+
+            <label for="allergens">Kindly mention your allergens:</label>
+            <input type="text" name="allergens" id="allergens" placeholder="Separate with commas or 'none' if none">
+
+            <button type="submit">Get Recommendations</button>
+        </form>
+    </div>
+</body>
+</html>

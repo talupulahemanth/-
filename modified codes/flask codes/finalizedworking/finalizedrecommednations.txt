@@ -1,0 +1,22 @@
+<!-- templates/recommendations.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendations</title>
+</head>
+<body>
+    <h1>Recommended Dishes:</h1>
+    {% if recommendations %}
+        <ul>
+            {% for dish in recommendations %}
+                <li>{{ dish[0] }} - {{ dish[1] }} - {{ dish[2] }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No recommended dishes found based on your preferences.</p>
+    {% endif %}
+</body>
+</html>
